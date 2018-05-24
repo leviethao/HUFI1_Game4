@@ -12,6 +12,8 @@ const {ccclass, property} = cc._decorator;
 import InGame from "./InGame";
 import GameSetting from "./GameSetting";
 import Circle from "./Circle";
+import Food from "./Food";
+import Rocket from "./Rocket";
 
 enum MoveDirection {
     None,
@@ -38,6 +40,7 @@ export default class NewClass extends cc.Component {
     moveDirection: MoveDirection;
     angle: number;
     jumpSpeedCur: number;
+    
 
     onLoad () {
         this.init();
@@ -62,6 +65,7 @@ export default class NewClass extends cc.Component {
         this.angle = -90;
         this.jumpSpeed = gameSetting.playerJumpSpeed;
         this.jumpSpeedCur = this.jumpSpeed;
+        
     }
 
     start () {
@@ -86,8 +90,19 @@ export default class NewClass extends cc.Component {
         this.drawing.fill();
     }
 
-    onCollisionEnter () {
-        console.log("COLLIDED");
+    onCollisionEnter (other) {
+        switch (other.tag) {
+            case 1: {
+                //food
+                other.node.getComponent(Food).destroyFood();
+                this.canvas.node.getComponent(InGame).gainScore();
+            } break;
+            case 2: {
+                //rocket
+                other.node.getComponent(Rocket).destroyRocket();
+                this.canvas.node.getComponent(InGame).levelDown();
+            } break;
+        }
     }
 
     onTouchStarted (touch: cc.Event.EventTouch) {
@@ -135,7 +150,7 @@ export default class NewClass extends cc.Component {
             return;
         }
 
-        this.angle -= this.moveSpeed * dt;
+        this.angle -= this.moveSpeed * dt * this.canvas.node.getComponent(InGame).circle.getComponent(Circle).getRatio();
         this.angle %= 360;
         this.rotate();
     }
@@ -145,7 +160,7 @@ export default class NewClass extends cc.Component {
             return;
         }
 
-        this.angle += this.moveSpeed * dt;
+        this.angle += this.moveSpeed * dt * this.canvas.node.getComponent(InGame).circle.getComponent(Circle).getRatio();
         this.angle %= 360;
         this.rotate();
     }

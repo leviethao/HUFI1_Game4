@@ -25,6 +25,10 @@ export default class Food extends cc.Component {
     speed: number;
     location: cc.Vec2;
 
+    gravity: number;
+    target: cc.Node = null;
+    gravityDistance: number;
+    
 
     onLoad () {
 
@@ -34,8 +38,12 @@ export default class Food extends cc.Component {
         let gameSetting = this.canvas.node.getComponent(InGame).gameSetting.getComponent(GameSetting);
         this.speed = gameSetting.foodSpeed;
 
-        this.canvas.getComponent(InGame).camera.getComponent(cc.Camera).addTarget(this.node);
+        this.canvas.node.getComponent(InGame).camera.getComponent(cc.Camera).addTarget(this.node);
         this.location = this.node.position;
+        this.gravity = gameSetting.foodGravity;
+        this.gravityDistance = gameSetting.foodGravityDistance;
+
+        this.node.getComponent(cc.CircleCollider).radius = this.node.width / 2;
     }
 
     start () {
@@ -45,6 +53,8 @@ export default class Food extends cc.Component {
     update (dt) {
         this.move(dt);
         this.checkOutOfCircle();
+        this.checkTargetDistance();
+        this.gravityEffect(dt);
     }
 
     reuse () {
@@ -71,6 +81,27 @@ export default class Food extends cc.Component {
         let circleRadius = circle.getComponent(Circle).radius;
         if (cc.pDistance(this.node.position, circle.position) > circleRadius - this.node.width / 2) {
             this.destroyFood();
+        }
+    }
+
+    gravityEffect (dt: number) {
+        if (!this.target) {
+            return;
+        }
+
+        let direction = this.target.position.add(this.node.position.mul(-1));
+        direction.normalizeSelf();
+
+        this.location.addSelf(direction.mul(this.gravity * dt));
+        this.node.position = this.location;
+    }
+
+    checkTargetDistance () {
+        let player = this.canvas.node.getComponent(InGame).player;
+        if (cc.pDistance(player.position, this.node.position) < this.gravityDistance) {
+            this.target = player;
+        } else {
+            this.target = null;
         }
     }
 }

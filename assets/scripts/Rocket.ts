@@ -11,6 +11,7 @@
 const {ccclass, property} = cc._decorator;
 import InGame from "./InGame";
 import GameSetting from "./GameSetting";
+import RocketLaucher from "./RocketLaucher";
 
 @ccclass
 export default class Rocket extends cc.Component {
@@ -20,6 +21,7 @@ export default class Rocket extends cc.Component {
     location: cc.Vec2;
     target: cc.Node;
     speed: number;
+    lifeTime: number;
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -31,6 +33,8 @@ export default class Rocket extends cc.Component {
         this.speed = gameSetting.rocketSpeed;
 
         this.canvas.node.getComponent(InGame).camera.getComponent(cc.Camera).addTarget(this.node);
+        this.node.getComponent(cc.BoxCollider).size = this.node.getContentSize();
+        this.lifeTime = gameSetting.rocketLifeTime;
     }
 
     start () {
@@ -39,6 +43,11 @@ export default class Rocket extends cc.Component {
 
     update (dt) {
         this.move(dt);
+
+        this.lifeTime -= dt;
+        if (this.lifeTime <= 0) {
+            this.destroyRocket();
+        }
     }
 
     move (dt: number) {
@@ -53,5 +62,7 @@ export default class Rocket extends cc.Component {
 
     destroyRocket () {
         this.canvas.node.getComponent(InGame).camera.getComponent(cc.Camera).removeTarget(this.node);
+        let rocketLaucher: RocketLaucher = this.canvas.node.getChildByName("RocketLaucher").getComponent(RocketLaucher);
+        rocketLaucher.rocketPool.put(this.node);
     }
 }

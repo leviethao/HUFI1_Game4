@@ -19,8 +19,11 @@ export default class Circle extends cc.Component {
 
     //setting
     radius: number = 0;
+    beginRadius: number;
     drawing: cc.Graphics = null;
     color: cc.Color = null;
+    grownUpFactor: number;
+
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
@@ -32,7 +35,9 @@ export default class Circle extends cc.Component {
     }
 
     init () {
-        this.radius = this.canvas.getComponent(InGame).gameSetting.getComponent(GameSetting).circleRadius;
+        let gameSetting = this.canvas.getComponent(InGame).gameSetting.getComponent(GameSetting);
+        this.radius = this.beginRadius = gameSetting.circleRadius;
+        this.grownUpFactor = gameSetting.circleGrownUpFactor;
     }
 
     start () {
@@ -49,5 +54,19 @@ export default class Circle extends cc.Component {
         this.drawing.fillColor = this.color;
         this.drawing.fill();
         this.drawing.stroke();
+    }
+
+    grownUp () {
+        this.radius += this.grownUpFactor;
+        this.draw();
+    }
+
+    shrinkBack () {
+        this.radius -= this.grownUpFactor;
+        this.draw();
+    }
+
+    getRatio () : number {
+        return this.beginRadius / this.radius;
     }
 }

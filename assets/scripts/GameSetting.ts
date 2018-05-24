@@ -43,6 +43,21 @@ export default class NewClass extends cc.Component {
     @property
     rocketSpeed: number = 0;
 
+    @property
+    foodGravity: number = 0;
+
+    @property
+    foodGravityDistance: number = 0;
+
+    @property
+    levelFactor: number = 0;
+
+    @property
+    circleGrownUpFactor: number = 0;
+
+    @property
+    rocketLifeTime: number = 0;
+
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
