@@ -14,16 +14,8 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     @property(cc.Node)
-    gameSetting: cc.Node = null;
-    
-    @property(cc.Node)
-    circle: cc.Node = null;
+    target: cc.Node = null;
 
-    @property(cc.Camera)
-    camera: cc.Camera = null;
-
-    @property(cc.Node)
-    player: cc.Node = null;
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -34,4 +26,8 @@ export default class NewClass extends cc.Component {
     }
 
     // update (dt) {}
+
+    lateUpdate () {
+        this.node.position = this.target.position;
+    }
 }

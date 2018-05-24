@@ -9,21 +9,39 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 const {ccclass, property} = cc._decorator;
-
+import Circle from "./Circle";
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.Node)
-    gameSetting: cc.Node = null;
-    
-    @property(cc.Node)
-    circle: cc.Node = null;
+    @property
+    circleRadius: number = 0;
 
-    @property(cc.Camera)
-    camera: cc.Camera = null;
+    @property
+    playerRadius: number = 0;
 
-    @property(cc.Node)
-    player: cc.Node = null;
+    @property
+    gravity: number = 0;
+
+    @property
+    playerMoveSpeed: number = 0;
+
+    @property
+    playerJumpSpeed: number = 0;
+
+    @property
+    foodLaucherRotateSpeed: number = 0;
+
+    @property
+    rocketLaucherRotateSpeed: number = 0;
+
+    @property
+    foodSpeed: number = 0;
+
+    @property
+    spawnFoodInterval: number = 0;
+
+    @property
+    rocketSpeed: number = 0;
 
     // LIFE-CYCLE CALLBACKS:
 
