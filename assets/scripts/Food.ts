@@ -13,6 +13,7 @@ import InGame from "./InGame";
 import GameSetting from "./GameSetting";
 import FoodLaucher from "./FoodLaucher";
 import Circle from "./Circle";
+import Util from "./Util";
 
 @ccclass
 export default class Food extends cc.Component {
@@ -66,7 +67,11 @@ export default class Food extends cc.Component {
     }
 
     move (dt: number) {
-        this.location.addSelf(this.direction.mul(this.speed * dt));
+        //this.location.addSelf(this.direction.mul(this.speed * dt));
+
+        this.location.x += this.direction.x * this.speed * dt;
+        this.location.y += this.direction.y * this.speed * dt;
+
         this.node.position = this.location;
     }
 
@@ -89,10 +94,14 @@ export default class Food extends cc.Component {
             return;
         }
 
-        let direction = this.target.position.add(this.node.position.mul(-1));
-        direction.normalizeSelf();
+        //let direction = this.target.position.add(this.node.position.mul(-1));
+        let direction = new cc.Vec2(this.target.position.x - this.node.position.x, this.target.position.y - this.node.position.y);
+        direction = Util.normalize(direction);
 
-        this.location.addSelf(direction.mul(this.gravity * dt));
+        //this.location.addSelf(direction.mul(this.gravity * dt));
+        this.location.x += direction.x * this.gravity * dt;
+        this.location.y += direction.y * this.gravity * dt;
+
         this.node.position = this.location;
     }
 

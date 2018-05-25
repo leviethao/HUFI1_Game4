@@ -12,6 +12,7 @@ const {ccclass, property} = cc._decorator;
 import InGame from "./InGame";
 import GameSetting from "./GameSetting";
 import Food from "./Food";
+import Util from "./Util";
 
 const FOOD_POOL_DEFAULT_SIZE = 10;
 
@@ -80,6 +81,6 @@ export default class NewClass extends cc.Component {
 
         let foodDirection = this.node.convertToWorldSpaceAR(this.node.getChildByName("FoodNose").position);
         foodDirection = this.canvas.node.convertToNodeSpaceAR(foodDirection);
-        food.getComponent(Food).direction = foodDirection.normalize();
+        food.getComponent(Food).direction = Util.normalize(foodDirection);
     }
 }

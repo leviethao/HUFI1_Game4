@@ -12,6 +12,7 @@ const {ccclass, property} = cc._decorator;
 import InGame from "./InGame";
 import GameSetting from "./GameSetting";
 import RocketLaucher from "./RocketLaucher";
+import Util from "./Util";
 
 @ccclass
 export default class Rocket extends cc.Component {
@@ -51,9 +52,12 @@ export default class Rocket extends cc.Component {
     }
 
     move (dt: number) {
-        let direction = this.target.position.add(this.node.position.mul(-1));
-        direction.normalizeSelf();
-        this.location.addSelf(direction.mul(this.speed * dt));
+        //let direction = this.target.position.add(this.node.position.mul(-1));
+        let direction = new cc.Vec2(this.target.x - this.node.x, this.target.y - this.node.y);
+        direction = Util.normalize(direction);
+        //this.location.addSelf(direction.mul(this.speed * dt));
+        this.location.x += direction.x * this.speed * dt;
+        this.location.y += direction.y * this.speed * dt;
         this.node.position = this.location;
 
         let angle = Math.atan2(direction.y, direction.x) * 180 / Math.PI;
